@@ -105,13 +105,16 @@ def main():
     '''
     This is where it all comes together
     '''
-    print()
-    print('Welcome to Tic Tac Toe!')
-    print('-----------------------')
-    print()
-    print('To make a move, please enter a position from 1 - 9')
-    print('corresponding to the layout of your phone keypad')
-    print()
+    print('''
+Welcome to Tic Tac Toe!
+-----------------------
+
+This is the traditional 'noughts' and 'crosses'
+game for two players. Get three in a row to win.
+
+To make a move, please enter a position from 1 - 9
+corresponding to the layout of your phone keypad
+    ''')
 
     board = list(' ' * 9)
     players = ['X', 'O']
