@@ -19,24 +19,20 @@ def display_board(board):
     Print the current board layout
     '''
     print()
-    print(' {0} | {1} | {2} '.format(board[0], board[1], board[2]))
+    print(' {} | {} | {} '.format(*board[0:3]))
     print('---|---|---')
-    print(' {0} | {1} | {2} '.format(board[3], board[4], board[5]))
+    print(' {} | {} | {} '.format(*board[3:6]))
     print('---|---|---')
-    print(' {0} | {1} | {2} '.format(board[6], board[7], board[8]))
+    print(' {} | {} | {} '.format(*board[6:9]))
     print()
 
 
 def make_move(board, position, player):
     '''
-    Add players move to the board
+    Add player's move to the board
     '''
-    pos = position - 1
-    if board[pos] != ' ':
-        # raise an error
-        pass
-    else:
-        board[pos] = player
+    # only valid moves are passed in here
+    board[position - 1] = player
 
 
 def winning_move(board, position, player):
@@ -49,6 +45,7 @@ def winning_move(board, position, player):
     elif get_column(board, position) == win:
         return True
     elif position % 2 != 0:
+        # odd positions are on the diagonals
         return get_diagonal(board, 1) == win or get_diagonal(board, 3) == win
     else:
         return False
@@ -58,8 +55,7 @@ def get_row(board, position):
     '''
     Return the row result
     '''
-    pos = position - 1
-    row = pos / 3 * 3
+    row = (position - 1) / 3 * 3
     return board[row:row + 3]
 
 
@@ -67,8 +63,7 @@ def get_column(board, position):
     '''
     Return the column result
     '''
-    pos = position - 1
-    col = pos % 3
+    col = (position - 1) % 3
     return [board[x] for x in (col, col + 3, col + 6)]
 
 
@@ -78,16 +73,17 @@ def get_diagonal(board, diagonal):
     based on whether it is 1 or 3
     '''
     if diagonal == 1:
-        return [board[x] for x in (0, 4, 8)]
+        positions = (0, 4, 8)
     elif diagonal == 3:
-        return [board[x] for x in (2, 4, 6)]
+        positions = (2, 4, 6)
+    return [board[x] for x in positions]
 
 
 def get_next_move(board, player):
     '''
     Prompt player to enter their next move
     '''
-    print("Player '{}' please enter your next move".format(player))
+    print("Player '{}' please enter your next move:".format(player))
     while True:
         move = get_input('> ')
         if '1' <= move <= '9':
@@ -100,14 +96,14 @@ def get_next_move(board, player):
 
 def valid_moves(board):
     '''
-    Return available moves
+    Return available moves ie unoccupied index positions
     '''
-    return [i for i, n in enumerate(board) if n == ' ']
+    return [i for i, x in enumerate(board) if x == ' ']
 
 
 def main():
     '''
-    This is where the action starts
+    This is where it all comes together
     '''
     print()
     print('Welcome to Tic Tac Toe!')
@@ -130,20 +126,20 @@ def main():
         make_move(board, position, player)
         display_board(board)
 
-        if moves > 4:
-            if winning_move(board, position, player):
-                print("Congratulations '{}', you are the winner :)".format(player))
-                print()
-                sys.exit(0)
+        if moves > 4 and winning_move(board, position, player):
+            print("Congratulations '{}', you are the winner :)".format(player))
+            break
 
         if moves > 8:
             print("Stalemate, no-one is a winner :(")
-            print()
-            sys.exit(0)
+            break
+
+    print()
+    sys.exit(0)
 
 # end of main
 
-
+# python2 and python3 portability
 if __name__ == "__main__":
     # Support Python 2 and 3 input
     # Default to Python 3's input()
