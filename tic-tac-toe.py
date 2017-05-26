@@ -116,28 +116,33 @@ To make a move, please enter a position from 1 - 9
 corresponding to the layout of your phone keypad
     ''')
 
-    board = list(' ' * 9)
-    players = ['X', 'O']
-    moves = 0
-    display_board(board)
-
     while True:
-        player = players.pop(0)
-        players.append(player)
-        moves += 1
-        position = get_next_move(board, player)
-        make_move(board, position, player)
+        board = list(' ' * 9)
+        players = ['X', 'O']
+        moves = 0
         display_board(board)
 
-        if moves > 4 and winning_move(board, position, player):
-            print("Congratulations '{}', you are the winner :)".format(player))
+        while True:
+            player = players.pop(0)
+            players.append(player)
+            moves += 1
+            position = get_next_move(board, player)
+            make_move(board, position, player)
+            display_board(board)
+
+            if moves > 4 and winning_move(board, position, player):
+                print("Congratulations '{}', you are the winner :)".format(player))
+                break
+
+            if moves > 8:
+                print("Stalemate, no-one is a winner :(")
+                break
+
+        print()
+        print("Would you like to play again (y/n)?")
+        if get_input('> ').upper() != 'Y':
             break
 
-        if moves > 8:
-            print("Stalemate, no-one is a winner :(")
-            break
-
-    print()
     sys.exit(0)
 
 # end of main
