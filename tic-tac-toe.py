@@ -69,7 +69,7 @@ def get_column(board, position):
     '''
     pos = position - 1
     col = pos % 3
-    return [board[col], board[col + 3], board[col + 6]]
+    return [board[x] for x in (col, col + 3, col + 6)]
 
 
 def get_diagonal(board, diagonal):
@@ -78,18 +78,31 @@ def get_diagonal(board, diagonal):
     based on whether it is 1 or 3
     '''
     if diagonal == 1:
-        return [board[0], board[4], board[8]]
+        return [board[x] for x in (0, 4, 8)]
     elif diagonal == 3:
-        return [board[2], board[4], board[6]]
+        return [board[x] for x in (2, 4, 6)]
 
 
-def get_next_move(player):
+def get_next_move(board, player):
     '''
     Prompt player to enter their next move
     '''
-    print
     print("Player '{}' please enter your next move".format(player))
-    return int(input('> '))
+    while True:
+        move = get_input('> ')
+        if '1' <= move <= '9':
+            move = int(move)
+            if move - 1 in valid_moves(board):
+                break
+        print("That is not a valid move, please try again...")
+    return move
+
+
+def valid_moves(board):
+    '''
+    Return available moves
+    '''
+    return [i for i, n in enumerate(board) if n == ' ']
 
 
 def main():
@@ -101,11 +114,11 @@ def main():
     print('-----------------------')
     print()
     print('To make a move, please enter a position from 1 - 9')
-    print('corresponding to the layout of your phone dialpad')
+    print('corresponding to the layout of your phone keypad')
     print()
 
     board = list(' ' * 9)
-    players = ['O', 'X']
+    players = ['X', 'O']
     moves = 0
     display_board(board)
 
@@ -113,17 +126,19 @@ def main():
         player = players.pop(0)
         players.append(player)
         moves += 1
-        position = get_next_move(player)
+        position = get_next_move(board, player)
         make_move(board, position, player)
         display_board(board)
 
         if moves > 4:
             if winning_move(board, position, player):
-                print("Congratulations '{}', you are the winner!".format(player))
+                print("Congratulations '{}', you are the winner :)".format(player))
+                print()
                 sys.exit(0)
 
         if moves > 8:
             print("Stalemate, no-one is a winner :(")
+            print()
             sys.exit(0)
 
 # end of main
