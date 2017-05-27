@@ -1,45 +1,40 @@
 #!/usr/bin/env python
-#
-# Tic Tac Toe game
-#
-# Created for the Milestone 1 Project
-#
-# the board is a 9 element list which will
-# store 'X' and 'O' for player moves
-# a space represents an unoccupied position
+# -*- coding: utf-8 -*-
+#pylint: disable=redefined-builtin
 
+""" Tic Tac Toe game
+
+The board is a 9 element list which will
+store 'X' and 'O' for player moves and
+a space represents an unoccupied position
+"""
 
 # python2 and python3 portability
 from __future__ import print_function
+from builtins import input
 import sys
 
 
 def display_board(board):
-    '''
-    Print the current board layout
-    '''
+    """Print the current board layout"""
     print()
-    print(' {} | {} | {} '.format(*board[0:3]))
-    print('---|---|---')
-    print(' {} | {} | {} '.format(*board[3:6]))
-    print('---|---|---')
-    print(' {} | {} | {} '.format(*board[6:9]))
+    print(" {} | {} | {} ".format(*board[0:3]))
+    print("---|---|---")
+    print(" {} | {} | {} ".format(*board[3:6]))
+    print("---|---|---")
+    print(" {} | {} | {} ".format(*board[6:9]))
     print()
 
 
 def make_move(board, position, player):
-    '''
-    Add player's move to the board
-    '''
+    """Add player's move to the board"""
     # only valid moves are passed in here
-    board[position - 1] = player
+    board[position-1] = player
 
 
 def winning_move(board, position, player):
-    '''
-    Check if the player made a winning move
-    '''
-    win = list(player * 3)
+    """Check if the player made a winning move"""
+    win = list(player*3)
     if get_row(board, position) == win:
         return True
     elif get_column(board, position) == win:
@@ -47,31 +42,23 @@ def winning_move(board, position, player):
     elif position % 2 != 0:
         # odd positions are on the diagonals
         return get_diagonal(board, 1) == win or get_diagonal(board, 3) == win
-    else:
-        return False
+    return False
 
 
 def get_row(board, position):
-    '''
-    Return the row result
-    '''
-    row = (position - 1) / 3 * 3
-    return board[row:row + 3]
+    """Return the row result"""
+    row = (position-1) // 3 * 3
+    return board[row:row+3]
 
 
 def get_column(board, position):
-    '''
-    Return the column result
-    '''
-    col = (position - 1) % 3
-    return [board[x] for x in (col, col + 3, col + 6)]
+    """Return the column result"""
+    col = (position-1) % 3
+    return [board[x] for x in (col, col+3, col+6)]
 
 
 def get_diagonal(board, diagonal):
-    '''
-    Return the diagonal result
-    based on whether it is 1 or 3
-    '''
+    """Return the diagonal result based on 1 (back) or 3 (forward)"""
     if diagonal == 1:
         positions = (0, 4, 8)
     elif diagonal == 3:
@@ -80,41 +67,36 @@ def get_diagonal(board, diagonal):
 
 
 def get_next_move(board, player):
-    '''
-    Prompt player to enter their next move
-    '''
+    """Prompt player to enter their next move"""
     print("Player '{}' please enter your next move:".format(player))
     while True:
-        move = get_input('> ')
+        move = input("> ")
         if '1' <= move <= '9':
             move = int(move)
-            if move - 1 in valid_moves(board):
+            if move-1 in valid_moves(board):
                 break
         print("That is not a valid move, please try again...")
     return move
 
 
 def valid_moves(board):
-    '''
-    Return available moves ie unoccupied index positions
-    '''
+    """Return available moves ie unoccupied index positions"""
     return [i for i, x in enumerate(board) if x == ' ']
 
 
 def main():
-    '''
-    This is where it all comes together
-    '''
-    print('''
-Welcome to Tic Tac Toe!
------------------------
+    """Run the main game loop"""
 
-This is the traditional 'noughts' and 'crosses'
-game for two players. Get three in a row to win.
+    print("""
+    Welcome to Tic Tac Toe!
+    -----------------------
 
-To make a move, please enter a position from 1 - 9
-corresponding to the layout of your phone keypad
-    ''')
+    This is the traditional 'noughts' and 'crosses'
+    game for two players. Get three in a row to win.
+
+    To make a move, please enter a position from 1 - 9
+    corresponding to the layout of your phone keypad
+    """)
 
     while True:
         board = list(' ' * 9)
@@ -140,21 +122,9 @@ corresponding to the layout of your phone keypad
 
         print()
         print("Would you like to play again (y/n)?")
-        if get_input('> ').upper() != 'Y':
+        if input('> ').upper() != 'Y':
             break
 
     sys.exit(0)
 
-# end of main
-
-# python2 and python3 portability
-if __name__ == "__main__":
-    # Support Python 2 and 3 input
-    # Default to Python 3's input()
-    get_input = input
-
-    # If this is Python 2, use raw_input()
-    if sys.version_info[:2] <= (2, 7):
-        get_input = raw_input
-
-    main()
+main()
